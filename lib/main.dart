@@ -49,8 +49,17 @@ class OtpList extends StatelessWidget {
                       color: doc['isDelivered'] ? Colors.blue : Colors.red),
                 ),
                 child: ListTile(
-                  title: Text(doc['customerName']),
-                  subtitle: Text('Order: ${doc['productNames'].join(', ')}'),
+                  title: Text('Order ID : ${doc['orderID']}'),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Name : ${doc['customerName']}'),
+                      Text('College : ${doc['College']}'),
+                      Text('Date Time : ${doc['DateTime']}'),
+                      Text('Picked Time : ${doc['PickedTime']}'),
+                      Text('Order: ${doc['productNames'].join(', ')}'),
+                    ],
+                  ),
                   leading:
                       Icon(doc['isDelivered'] ? Icons.check : Icons.pending),
                   onTap: () {
