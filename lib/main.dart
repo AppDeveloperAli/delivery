@@ -55,6 +55,8 @@ class OtpList extends StatelessWidget {
                     children: [
                       Text('Name : ${doc['customerName']}'),
                       Text('College : ${doc['College']}'),
+                      Text('Hostel : ${doc['Hostel']}'),
+                      Text('Room : ${doc['Room']}'),
                       Text('Date Time : ${doc['DateTime']}'),
                       Text('Picked Time : ${doc['PickedTime']}'),
                       Text('Order: ${doc['productNames'].join(', ')}'),
