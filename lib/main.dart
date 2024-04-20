@@ -1,8 +1,10 @@
 import 'package:delivery/firebase_options.dart';
+import 'package:delivery/printer.dart';
 import 'package:delivery/snack.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 // import 'package:pinput/pinput.dart';
 
 void main() async {
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('OTP List'),
+          title: const Text('OTP List'),
         ),
         body: OtpList(),
       ),
@@ -36,7 +38,7 @@ class OtpList extends StatelessWidget {
       stream: FirebaseFirestore.instance.collection('otp').snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         }
         return ListView(
           children: snapshot.data!.docs.map((doc) {
@@ -62,8 +64,25 @@ class OtpList extends StatelessWidget {
                       Text('Order: ${doc['productNames'].join(', ')}'),
                     ],
                   ),
-                  leading:
+                  leading: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Icon(doc['isDelivered'] ? Icons.check : Icons.pending),
+                      GestureDetector(
+                          onTap: () {
+                            List<Map<String, dynamic>> data = [
+                              doc.data() as Map<String, dynamic>
+                            ];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => PrintPage(data),
+                              ),
+                            );
+                          },
+                          child: const Icon(Icons.print)),
+                    ],
+                  ),
                   onTap: () {
                     showPinInput(context, doc);
                   },
@@ -82,14 +101,14 @@ class OtpList extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Enter Pin Code'),
+          title: const Text('Enter Pin Code'),
           content: TextField(
             onChanged: (value) {
               pinCode = value;
             },
             keyboardType: TextInputType.number,
             maxLength: 4, // Restrict to 4 digits
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Enter Pin Code',
             ),
           ),
@@ -98,7 +117,7 @@ class OtpList extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () async {
@@ -109,20 +128,20 @@ class OtpList extends StatelessWidget {
                       .doc(doc.id)
                       .update({'isDelivered': true});
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text('Pin code matched!'),
                     ),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text('Incorrect pin code!'),
                     ),
                   );
                 }
                 Navigator.of(context).pop();
               },
-              child: Text('Submit'),
+              child: const Text('Submit'),
             ),
           ],
         );
